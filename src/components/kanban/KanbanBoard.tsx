@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { KanbanColumn } from "./KanbanColumn";
+import { DynamicFormModal } from "./DynamicFormModal";
 import { initialKanbanData } from "@/data/initialData";
+import { taskFormConfig } from "@/data/taskFormConfig";
 import { Column, Task } from "@/types/kanban";
 import { useToast } from "@/hooks/use-toast";
 
 export function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>(initialKanbanData.columns);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const onDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
+    const { destination, source } = result;
 
     // Dropped outside
     if (!destination) return;
@@ -59,36 +63,59 @@ export function KanbanBoard() {
     }
   };
 
-  const handleAddTask = (columnId: string) => {
+  const handleOpenModal = (columnId: string) => {
+    setActiveColumnId(columnId);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setActiveColumnId(null);
+  };
+
+  const handleCreateTask = (formData: Record<string, unknown>) => {
+    if (!activeColumnId) return;
+
     const newTask: Task = {
       id: `task-${Date.now()}`,
-      title: "Nova tarefa",
-      description: "Clique para editar",
-      priority: "medium",
+      title: (formData.title as string) || "Nova tarefa",
+      description: (formData.description as string) || "",
+      priority: (formData.priority as "low" | "medium" | "high") || "medium",
+      dueDate: formData.dueDate as string | undefined,
+      tags: formData.urgent ? ["Urgente"] : undefined,
     };
 
     const newColumns = columns.map((col) =>
-      col.id === columnId ? { ...col, tasks: [...col.tasks, newTask] } : col
+      col.id === activeColumnId ? { ...col, tasks: [...col.tasks, newTask] } : col
     );
     setColumns(newColumns);
 
     toast({
       title: "Tarefa criada",
-      description: "Nova tarefa adicionada com sucesso",
+      description: `"${newTask.title}" adicionada com sucesso`,
     });
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
-        {columns.map((column) => (
-          <KanbanColumn
-            key={column.id}
-            column={column}
-            onAddTask={handleAddTask}
-          />
-        ))}
-      </div>
-    </DragDropContext>
+    <>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
+          {columns.map((column) => (
+            <KanbanColumn
+              key={column.id}
+              column={column}
+              onAddTask={handleOpenModal}
+            />
+          ))}
+        </div>
+      </DragDropContext>
+
+      <DynamicFormModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleCreateTask}
+        config={taskFormConfig}
+      />
+    </>
   );
 }
