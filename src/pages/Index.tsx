@@ -8,14 +8,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState("quadro");
 
   return (
-    <div className="flex min-h-screen w-full">
-      <AppSidebar />
-      
-      <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
-        <Header 
-          title="Compras" 
-          subtitle="Gerencie suas atividades de compras"
-        />
+    <>
         
         <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
         
@@ -40,8 +33,7 @@ const Index = () => {
             </div>
           )}
         </main>
-      </div>
-    </div>
+    </>
   );
 };
 
