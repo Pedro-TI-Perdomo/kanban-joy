@@ -76,7 +76,8 @@ export function DynamicFormModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit(formData);
+      // Inclui o formId nos dados do formulário
+      onSubmit({ ...formData, _formId: config.formId });
       onClose();
     }
   };
@@ -208,22 +209,25 @@ export function DynamicFormModal({
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-4 space-y-4 max-h-[60vh] md:max-h-[50vh] overflow-y-auto scrollbar-thin">
-          {config.fields.map((field) => (
-            <div key={field.id} className="space-y-1.5">
-              {field.type !== "checkbox" && (
-                <Label htmlFor={field.id} className="text-sm">
-                  {field.label}
-                  {field.required && (
-                    <span className="text-destructive ml-1">*</span>
-                  )}
-                </Label>
-              )}
-              {renderField(field)}
-              {errors[field.id] && (
-                <p className="text-xs text-destructive">{errors[field.id]}</p>
-              )}
-            </div>
-          ))}
+          {/* Ordena os campos pelo order antes de renderizar */}
+          {[...config.fields]
+            .sort((a, b) => a.order - b.order)
+            .map((field) => (
+              <div key={field.id} className="space-y-1.5">
+                {field.type !== "checkbox" && (
+                  <Label htmlFor={field.id} className="text-sm">
+                    {field.label}
+                    {field.required && (
+                      <span className="text-destructive ml-1">*</span>
+                    )}
+                  </Label>
+                )}
+                {renderField(field)}
+                {errors[field.id] && (
+                  <p className="text-xs text-destructive">{errors[field.id]}</p>
+                )}
+              </div>
+            ))}
         </form>
 
         {/* Footer */}

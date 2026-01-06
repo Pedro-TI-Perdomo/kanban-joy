@@ -9,6 +9,7 @@ export interface FormField {
   id: string;
   label: string;
   type: FieldType;
+  order: number; // Ordem de exibição do campo
   required?: boolean;
   placeholder?: string;
   options?: SelectOption[]; // For select fields
@@ -18,6 +19,7 @@ export interface FormField {
 }
 
 export interface FormConfig {
+  formId: string; // Identificador único do formulário
   title: string;
   fields: FormField[];
   submitLabel?: string;
