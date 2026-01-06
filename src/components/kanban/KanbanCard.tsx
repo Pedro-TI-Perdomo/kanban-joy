@@ -38,11 +38,11 @@ export function KanbanCard({ task, index }: KanbanCardProps) {
             {task.title}
           </h4>
           
-          {task.description && (
+          {/* {task.description && (
             <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
               {task.description}
             </p>
-          )}
+          )} */}
 
           <div className="flex items-center justify-between gap-2">
             {task.priority && (
@@ -51,14 +51,14 @@ export function KanbanCard({ task, index }: KanbanCardProps) {
               </span>
             )}
             
-            {task.tags && task.tags.length > 0 && (
+            {/* {task.tags && task.tags.length > 0 && (
               <div className="flex items-center gap-1">
                 <Tag className="w-3 h-3 text-muted-foreground" />
                 <span className="text-xs text-muted-foreground">
                   {task.tags.length}
                 </span>
               </div>
-            )}
+            )} */}
           </div>
 
           {task.dueDate && (

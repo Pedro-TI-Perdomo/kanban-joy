@@ -29,7 +29,7 @@ export function KanbanColumn({ column, onAddTask }: KanbanColumnProps) {
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`
-              flex-1 p-3 space-y-3 overflow-y-auto scrollbar-thin min-h-[200px] max-h-[calc(100vh-280px)]
+              flex-1 p-3 space-y-3 overflow-y-auto scrollbar-thin min-h-[200px] max-h-[calc(100vh-300px)]
               transition-colors duration-200
               ${snapshot.isDraggingOver ? "bg-accent/5" : ""}
             `}
