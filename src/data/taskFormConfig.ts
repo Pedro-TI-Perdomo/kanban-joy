@@ -1,6 +1,7 @@
 import { FormConfig } from "@/types/formConfig";
 
 export const taskFormConfig: FormConfig = {
+  formId: "task-form",
   title: "Nova Tarefa",
   submitLabel: "Criar Tarefa",
   cancelLabel: "Cancelar",
@@ -9,6 +10,7 @@ export const taskFormConfig: FormConfig = {
       id: "title",
       label: "Título",
       type: "text",
+      order: 1,
       required: true,
       placeholder: "Digite o título da tarefa",
     },
@@ -16,6 +18,7 @@ export const taskFormConfig: FormConfig = {
       id: "description",
       label: "Descrição",
       type: "textarea",
+      order: 2,
       required: false,
       placeholder: "Descreva a tarefa...",
     },
@@ -23,6 +26,7 @@ export const taskFormConfig: FormConfig = {
       id: "priority",
       label: "Prioridade",
       type: "select",
+      order: 3,
       required: true,
       options: [
         { value: "low", label: "Baixa" },
@@ -35,12 +39,14 @@ export const taskFormConfig: FormConfig = {
       id: "dueDate",
       label: "Data de Vencimento",
       type: "date",
+      order: 4,
       required: false,
     },
     {
       id: "estimatedHours",
       label: "Horas Estimadas",
       type: "number",
+      order: 5,
       required: false,
       placeholder: "Ex: 4",
       min: 0,
@@ -50,6 +56,7 @@ export const taskFormConfig: FormConfig = {
       id: "urgent",
       label: "Marcar como urgente",
       type: "checkbox",
+      order: 6,
       required: false,
       defaultValue: false,
     },
