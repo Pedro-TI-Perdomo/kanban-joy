@@ -4,15 +4,15 @@ import { Outlet } from "react-router-dom";
 
 const KabanLayout = () => {
   return (
-    <div className="flex min-h-screen w-full">
-      <AppSidebar />
+    <div className="flex flex-col min-h-screen w-full">
+      <Header title="Compras" />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header 
-          title="Compras"
-        />
+      <div className="flex flex-1 overflow-hidden">
+        <AppSidebar />
         
-        <Outlet />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
