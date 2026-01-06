@@ -1,5 +1,5 @@
 import { Droppable } from "@hello-pangea/dnd";
-import { Column } from "@/types/kanban";
+import { Column, Task } from "@/types/kanban";
 import { KanbanCard } from "./KanbanCard";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 interface KanbanColumnProps {
   column: Column;
   onAddTask?: (columnId: string) => void;
+  onEditTask?: (task: Task) => void;
 }
 
-export function KanbanColumn({ column, onAddTask }: KanbanColumnProps) {
+export function KanbanColumn({ column, onAddTask, onEditTask }: KanbanColumnProps) {
   return (
     <div className="flex flex-col w-72 min-w-72 bg-kanban-column rounded-xl border border-border/50 overflow-hidden animate-fade-in">
       {/* Header */}
@@ -35,7 +36,7 @@ export function KanbanColumn({ column, onAddTask }: KanbanColumnProps) {
             `}
           >
             {column.tasks.map((task, index) => (
-              <KanbanCard key={task.id} task={task} index={index} />
+              <KanbanCard key={task.id} task={task} index={index} onEdit={onEditTask} />
             ))}
             {provided.placeholder}
           </div>

@@ -20,6 +20,8 @@ interface DynamicFormModalProps {
   onClose: () => void;
   onSubmit: (data: Record<string, unknown>) => void;
   config: FormConfig;
+  initialData?: Record<string, unknown>;
+  mode?: "create" | "edit";
 }
 
 export function DynamicFormModal({
@@ -27,27 +29,32 @@ export function DynamicFormModal({
   onClose,
   onSubmit,
   config,
+  initialData: externalInitialData,
+  mode = "create",
 }: DynamicFormModalProps) {
   const [formData, setFormData] = useState<Record<string, unknown>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Initialize form data with default values
+  // Initialize form data with default values or initial data (for edit mode)
   useEffect(() => {
     if (isOpen) {
-      const initialData: Record<string, unknown> = {};
+      const data: Record<string, unknown> = {};
       config.fields.forEach((field) => {
-        if (field.defaultValue !== undefined) {
-          initialData[field.id] = field.defaultValue;
+        // Se temos dados iniciais (modo edição), usa eles
+        if (externalInitialData && externalInitialData[field.id] !== undefined) {
+          data[field.id] = externalInitialData[field.id];
+        } else if (field.defaultValue !== undefined) {
+          data[field.id] = field.defaultValue;
         } else if (field.type === "checkbox") {
-          initialData[field.id] = false;
+          data[field.id] = false;
         } else {
-          initialData[field.id] = "";
+          data[field.id] = "";
         }
       });
-      setFormData(initialData);
+      setFormData(data);
       setErrors({});
     }
-  }, [isOpen, config.fields]);
+  }, [isOpen, config.fields, externalInitialData]);
 
   const handleChange = (fieldId: string, value: unknown) => {
     setFormData((prev) => ({ ...prev, [fieldId]: value }));
@@ -196,7 +203,9 @@ export function DynamicFormModal({
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h3 className="font-semibold text-foreground">{config.title}</h3>
+          <h3 className="font-semibold text-foreground">
+            {mode === "edit" ? `Editar ${config.title.replace(/^Nov[oa]\s+/i, "")}` : config.title}
+          </h3>
           <Button
             variant="ghost"
             size="icon"
@@ -236,7 +245,7 @@ export function DynamicFormModal({
             {config.cancelLabel || "Cancelar"}
           </Button>
           <Button onClick={handleSubmit}>
-            {config.submitLabel || "Salvar"}
+            {mode === "edit" ? "Salvar Alterações" : (config.submitLabel || "Salvar")}
           </Button>
         </div>
       </div>

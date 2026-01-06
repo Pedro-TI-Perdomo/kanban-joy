@@ -1,10 +1,11 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Task } from "@/types/kanban";
-import { Calendar, Tag } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 interface KanbanCardProps {
   task: Task;
   index: number;
+  onEdit?: (task: Task) => void;
 }
 
 const priorityColors = {
@@ -19,7 +20,14 @@ const priorityLabels = {
   high: "Alta",
 };
 
-export function KanbanCard({ task, index }: KanbanCardProps) {
+export function KanbanCard({ task, index, onEdit }: KanbanCardProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    // Só abre o modal se não estiver arrastando
+    if (onEdit && !e.defaultPrevented) {
+      onEdit(task);
+    }
+  };
+
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
@@ -27,6 +35,7 @@ export function KanbanCard({ task, index }: KanbanCardProps) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          onClick={handleClick}
           className={`
             group p-4 rounded-lg bg-kanban-card border border-border/50
             hover:bg-kanban-card-hover hover:border-accent/30
@@ -37,12 +46,6 @@ export function KanbanCard({ task, index }: KanbanCardProps) {
           <h4 className="font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
             {task.title}
           </h4>
-          
-          {/* {task.description && (
-            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-              {task.description}
-            </p>
-          )} */}
 
           <div className="flex items-center justify-between gap-2">
             {task.priority && (
@@ -50,15 +53,6 @@ export function KanbanCard({ task, index }: KanbanCardProps) {
                 {priorityLabels[task.priority]}
               </span>
             )}
-            
-            {/* {task.tags && task.tags.length > 0 && (
-              <div className="flex items-center gap-1">
-                <Tag className="w-3 h-3 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
-                  {task.tags.length}
-                </span>
-              </div>
-            )} */}
           </div>
 
           {task.dueDate && (
