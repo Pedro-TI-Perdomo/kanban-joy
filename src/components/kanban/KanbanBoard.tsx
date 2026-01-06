@@ -11,6 +11,8 @@ export function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>(initialKanbanData.columns);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const { toast } = useToast();
 
   const onDragEnd = (result: DropResult) => {
@@ -63,14 +65,23 @@ export function KanbanBoard() {
     }
   };
 
-  const handleOpenModal = (columnId: string) => {
+  const handleOpenCreateModal = (columnId: string) => {
     setActiveColumnId(columnId);
+    setEditingTask(null);
+    setModalMode("create");
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEditModal = (task: Task) => {
+    setEditingTask(task);
+    setModalMode("edit");
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setActiveColumnId(null);
+    setEditingTask(null);
   };
 
   const handleCreateTask = (formData: Record<string, unknown>) => {
@@ -96,6 +107,54 @@ export function KanbanBoard() {
     });
   };
 
+  const handleEditTask = (formData: Record<string, unknown>) => {
+    if (!editingTask) return;
+
+    const updatedTask: Task = {
+      ...editingTask,
+      title: (formData.title as string) || editingTask.title,
+      description: (formData.description as string) || "",
+      priority: (formData.priority as "low" | "medium" | "high") || editingTask.priority,
+      dueDate: formData.dueDate as string | undefined,
+      tags: formData.urgent ? ["Urgente"] : undefined,
+    };
+
+    const newColumns = columns.map((col) => ({
+      ...col,
+      tasks: col.tasks.map((task) =>
+        task.id === editingTask.id ? updatedTask : task
+      ),
+    }));
+    setColumns(newColumns);
+
+    toast({
+      title: "Tarefa atualizada",
+      description: `"${updatedTask.title}" foi atualizada`,
+    });
+  };
+
+  const handleSubmit = (formData: Record<string, unknown>) => {
+    if (modalMode === "edit") {
+      handleEditTask(formData);
+    } else {
+      handleCreateTask(formData);
+    }
+  };
+
+  // Prepara os dados iniciais para o modal de edição
+  const getInitialData = (): Record<string, unknown> | undefined => {
+    if (modalMode === "edit" && editingTask) {
+      return {
+        title: editingTask.title,
+        description: editingTask.description || "",
+        priority: editingTask.priority || "medium",
+        dueDate: editingTask.dueDate || "",
+        urgent: editingTask.tags?.includes("Urgente") || false,
+      };
+    }
+    return undefined;
+  };
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -104,7 +163,8 @@ export function KanbanBoard() {
             <KanbanColumn
               key={column.id}
               column={column}
-              onAddTask={handleOpenModal}
+              onAddTask={handleOpenCreateModal}
+              onEditTask={handleOpenEditModal}
             />
           ))}
         </div>
@@ -113,8 +173,10 @@ export function KanbanBoard() {
       <DynamicFormModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        onSubmit={handleCreateTask}
+        onSubmit={handleSubmit}
         config={taskFormConfig}
+        initialData={getInitialData()}
+        mode={modalMode}
       />
     </>
   );
