@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { AppSidebar } from "@/components/layout/AppSidebar";
-import { Header } from "@/components/layout/Header";
 import { TabNav } from "@/components/layout/TabNav";
 import { KanbanBoard } from "@/components/kanban/KanbanBoard";
 
