@@ -21,7 +21,7 @@ interface TabNavProps {
 
 export function TabNav({ activeTab, onTabChange }: TabNavProps) {
   return (
-    <nav className="flex items-center gap-1 px-6 pt-1 border-b-2 border-white">
+    <nav className="flex items-center gap-1 px-6 pt-2 border-b-2 border-white">
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         return (

@@ -33,18 +33,12 @@ export function Header({ title, subtitle }: HeaderProps) {
   const location = useLocation();
 
   return (
-    <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border/50">
+    <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border/50 bg-sidebar">
       {/* Left: Brand + Mobile Menu */}
       <div className="flex items-center gap-3">
         {/* Brand */}
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">P</span>
-          </div>
-          <div className="hidden sm:block">
-            <h1 className="font-bold text-primary text-lg leading-none">Perdomo</h1>
-            <span className="text-xs text-muted-foreground">DOCES</span>
-          </div>
+          <img src="/Images/Logo/logo-perdomo.png" className="h-8" />
         </div>
 
         {/* Mobile Navigation Dropdown */}

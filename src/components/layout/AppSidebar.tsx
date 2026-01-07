@@ -39,17 +39,6 @@ export function AppSidebar() {
     >
       {/* Logo */}
       <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
-        {!collapsed && (
-          <div className="flex items-center gap-2 animate-slide-in">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">P</span>
-            </div>
-            <div>
-              <h1 className="font-bold text-primary text-lg leading-none">Perdomo</h1>
-              <span className="text-xs text-muted-foreground">DOCES</span>
-            </div>
-          </div>
-        )}
         
         <Button
           variant="ghost"

@@ -17,7 +17,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/kanban" element={<KabanLayout />}>
-            <Route path="" element={<Index />} />
+            <Route path="" index element={<Index />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
