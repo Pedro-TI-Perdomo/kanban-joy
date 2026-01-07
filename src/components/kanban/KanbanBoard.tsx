@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { KanbanColumn } from "./KanbanColumn";
 import { DynamicFormModal } from "./DynamicFormModal";
@@ -6,6 +6,7 @@ import { initialKanbanData } from "@/data/initialData";
 import { taskFormConfig } from "@/data/taskFormConfig";
 import { Column, Task } from "@/types/kanban";
 import { useToast } from "@/hooks/use-toast";
+import { useAutoScroll } from "@/hooks/useAutoScroll";
 
 export function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>(initialKanbanData.columns);
@@ -13,9 +14,23 @@ export function KanbanBoard() {
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+  const [isDragging, setIsDragging] = useState(false);
   const { toast } = useToast();
+  
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Hook para auto-scroll durante o drag
+  useAutoScroll(scrollContainerRef, isDragging, {
+    edgeThreshold: 120,
+    scrollSpeed: 10,
+  });
+
+  const onDragStart = () => {
+    setIsDragging(true);
+  };
 
   const onDragEnd = (result: DropResult) => {
+    setIsDragging(false);
     const { destination, source } = result;
 
     // Dropped outside
@@ -157,8 +172,11 @@ export function KanbanBoard() {
 
   return (
     <>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
+      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin"
+        >
           {columns.map((column) => (
             <KanbanColumn
               key={column.id}
