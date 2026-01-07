@@ -1,4 +1,4 @@
-import { Search, Filter, ChevronDown, Menu } from "lucide-react";
+import { Search, Filter, ChevronDown, Menu, PanelLeftClose, PanelLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,14 +21,13 @@ export function Header({ title, subtitle, onMenuClick }: HeaderProps) {
     <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border/50 bg-sidebar">
       {/* Left: Brand + Mobile Menu */}
       <div className="flex items-center gap-3">
-        {/* Mobile Menu Button */}
+        {/* Menu Toggle Button - visível em todas as telas */}
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
           onClick={onMenuClick}
         >
-          <Menu className="h-5 w-5" />
+          <PanelLeft className="h-5 w-5" />
         </Button>
 
         {/* Brand */}
