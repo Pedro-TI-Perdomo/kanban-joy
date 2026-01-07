@@ -1,4 +1,4 @@
-import { Search, Filter, ChevronDown, LayoutDashboard, ShoppingCart, Package, Users, BarChart3, FileText, Calendar, Settings } from "lucide-react";
+import { Search, Filter, ChevronDown, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,65 +9,32 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useNavigate, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
-
-const menuItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Compras", url: "/kanban", icon: ShoppingCart },
-  { title: "Produtos", url: "/produtos", icon: Package },
-  { title: "Clientes", url: "/clientes", icon: Users },
-  { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
-  { title: "Documentos", url: "/documentos", icon: FileText },
-  { title: "Calendário", url: "/calendario", icon: Calendar },
-  { title: "Configurações", url: "/configuracoes", icon: Settings },
-];
 
 interface HeaderProps {
   title: string;
   subtitle?: string;
+  onMenuClick?: () => void;
 }
 
-export function Header({ title, subtitle }: HeaderProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
-
+export function Header({ title, subtitle, onMenuClick }: HeaderProps) {
   return (
     <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border/50 bg-sidebar">
       {/* Left: Brand + Mobile Menu */}
       <div className="flex items-center gap-3">
+        {/* Mobile Menu Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          onClick={onMenuClick}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+
         {/* Brand */}
         <div className="flex items-center gap-2">
-          <img src="/Images/Logo/logo-perdomo.png" className="h-8" />
+          <img src="/Images/Logo/logo-perdomo.png" className="h-8" alt="Logo" />
         </div>
-
-        {/* Mobile Navigation Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground">
-              <span className="text-sm font-medium text-foreground">{title}</span>
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56 bg-popover border border-border z-50">
-            {menuItems.map((item) => {
-              const isActive = location.pathname === item.url;
-              return (
-                <DropdownMenuItem
-                  key={item.url}
-                  onClick={() => navigate(item.url)}
-                  className={cn(
-                    "flex items-center gap-3 cursor-pointer",
-                    isActive && "bg-accent text-accent-foreground"
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.title}</span>
-                </DropdownMenuItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
 
         {/* Desktop: Page Title */}
         <div className="hidden md:flex items-center gap-3 ml-4 pl-4 border-l border-border/50">
