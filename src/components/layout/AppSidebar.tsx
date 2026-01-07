@@ -50,20 +50,20 @@ export function AppSidebar({ isOpen, onClose, onToggle }: AppSidebarProps) {
           isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full md:w-0 md:translate-x-0"
         )}
       >
-        {/* Header do Sidebar */}
-        <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
-          <span className={cn("font-semibold text-sidebar-foreground transition-opacity", !isOpen && "opacity-0")}>
-            Menu
-          </span>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-            onClick={onToggle}
-          >
-            {isOpen ? <ChevronLeft className="h-4 w-4" /> : <X className="h-4 w-4" />}
-          </Button>
-        </div>
+        {/* Header do Sidebar - só mostra quando aberto */}
+        {isOpen && (
+          <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
+            <span className="font-semibold text-sidebar-foreground">Menu</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              onClick={onToggle}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
 
         {/* Navigation */}
         <nav className={cn("flex-1 p-3 space-y-1 overflow-y-auto overflow-x-hidden", !isOpen && "hidden")}>
